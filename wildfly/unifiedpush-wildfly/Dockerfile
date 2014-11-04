@@ -3,7 +3,7 @@ FROM aerogear/wildfly
 MAINTAINER Bruno Oliveira <bruno@aerogear.org>
 
 # Run everything below as aerogear user
-USER aerogear
+USER jboss
 
 # Switch to the working dir $JBOSS_HOME/standalone/deployments
 WORKDIR /opt/jboss/wildfly/standalone/deployments

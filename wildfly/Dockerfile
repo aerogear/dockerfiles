@@ -2,32 +2,17 @@
 FROM jboss/wildfly
 MAINTAINER Bruno Oliveira <bruno@abstractj.org>
 
-# Set the HOME environment variable
-ENV HOME /opt/aerogear
+# Run everything below as root user
+USER root
 
 # Set the Java environment variable
 ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk
-
-# Run everything below as root user
-USER root
 
 # Clean the metadata
 RUN yum -q clean all
 
 # Disable requiretty to prevent Node.js sessions hangup
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
-
-# Create the aerogear user
-RUN useradd -m aerogear -d /opt/aerogear -s /sbin/nologin
-
-# Change the owner of /opt/aerogear and /opt/jboss/wildfly directory
-RUN chown -R aerogear /opt/aerogear && chown -R aerogear /opt/jboss/wildfly*
-
-# Change the group of /opt/aerogear and /opt/jboss/wildfly directory
-RUN chgrp -R users /opt/aerogear && chown -R aerogear /opt/jboss/wildfly*
-
-# Allows aerogear user to run keytool and yum with sudo
-RUN echo "aerogear ALL=NOPASSWD:/usr/bin/keytool,/usr/bin/yum" >> /etc/sudoers
 
 # Rename the original configuration file
 RUN mv $JBOSS_HOME/standalone/configuration/standalone.xml $JBOSS_HOME/standalone/configuration/standalone.xml.orig
