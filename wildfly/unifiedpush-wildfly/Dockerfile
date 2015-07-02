@@ -8,8 +8,8 @@ USER jboss
 # Switch to the working dir $JBOSS_HOME/standalone/deployments
 WORKDIR /opt/jboss/wildfly/standalone/deployments
 
-# Download binary file for the UnifiedPush server
-RUN curl -o ag-push.war https://repository.jboss.org/nexus/content/repositories/public-jboss/org/jboss/aerogear/unifiedpush/unifiedpush-server-wildfly/1.0.3/unifiedpush-server-wildfly-1.0.3.war
-
 # Download binary file for the auth-server with Keycloak
-RUN curl -o auth-server.war https://repository.jboss.org/nexus/content/repositories/public-jboss/org/jboss/aerogear/unifiedpush/unifiedpush-auth-server/1.0.3/unifiedpush-auth-server-1.0.3.war
+RUN curl -o auth-server.war https://repository.jboss.org/nexus/content/repositories/public-jboss/org/jboss/aerogear/unifiedpush/unifiedpush-auth-server/1.1.0-beta.2/unifiedpush-auth-server-1.1.0-beta.2.war
+
+# Download binary file for the UnifiedPush server
+RUN curl -o ag-push.war https://repository.jboss.org/nexus/content/repositories/public-jboss/org/jboss/aerogear/unifiedpush/unifiedpush-server-wildfly/1.1.0-beta.2/unifiedpush-server-wildfly-1.1.0-beta.2.war
