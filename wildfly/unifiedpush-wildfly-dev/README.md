@@ -21,7 +21,7 @@ docker run --name keycloakDEV \
            -e MYSQL_PASSWORD=unifiedpush \
            -e MYSQL_DATABASE=keycloak \
            -e MYSQL_ROOT_PASSWORD=supersecret \
-           -d mysql
+           -d mysql:5.5
 ```
 
 For the database of the UnifiedPush Server itself, a similar command is needed:
@@ -33,7 +33,7 @@ docker run --name unifiedpushDEV \
            -e MYSQL_PASSWORD=unifiedpush \
            -e MYSQL_DATABASE=unifiedpush \
            -e MYSQL_ROOT_PASSWORD=supersecret \
-           -d mysql
+           -d mysql:5.5
 ```
 
 The two databases are now linked into the container that serves WildFly, containing the latest release of the UPS

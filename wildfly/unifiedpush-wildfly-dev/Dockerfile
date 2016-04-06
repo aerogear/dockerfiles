@@ -12,7 +12,7 @@ ENV MAVEN_OPTS -Xmx768m -XX:+UseConcMarkSweepGC -XX:MaxPermSize=128m -XX:+CMSCla
 ENV NPM_MODULES_HOME /opt/jboss/node_modules/
 
 # Set the Maven version
-ENV MAVEN_VERSION 3.1.1
+ENV MAVEN_VERSION 3.3.9
 
 # Set M2_HOME directory
 ENV M2_HOME /opt/jboss/tools/maven
@@ -29,7 +29,7 @@ RUN echo "jboss ALL=NOPASSWD:/usr/bin/npm" >> /etc/sudoers
 # Install Node.js and git for CentOS7
 RUN yum install -y git && \
     yum install -y \
-    https://rpm.nodesource.com/pub_0.12/el/7/x86_64/nodejs-0.12.7-1nodesource.el7.centos.x86_64.rpm && \
+    https://rpm.nodesource.com/pub_0.12/el/7/x86_64/nodejs-0.12.9-1nodesource.el7.centos.x86_64.rpm && \
     yum clean all -y
 
 # Clean the cache
