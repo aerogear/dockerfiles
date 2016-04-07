@@ -25,7 +25,6 @@ docker run --name keycloakDB \
            -d mysql:5.5
 ```
 
-
 For the database of the UnifiedPush Server itself, a similar command is needed:
 
 ```shell
@@ -38,6 +37,9 @@ docker run --name unifiedpushDB \
            -d mysql:5.5
 ```
 
+**Note** you can skip the -p options for the 2 database containers if you do not want to access the databases directly
+
+
 The two databases are now linked into the container that serves WildFly, containing the latest release of the UPS
 
 ```shell
@@ -48,7 +50,13 @@ docker run --name ups \
            -it aerogear/unifiedpush-wildfly
 ```
 
-**Note**: The image will run SSL by default with self signed certificates being automatically generated.
+**Note**: The image will run SSL by default with self signed certificates being automatically generated.    
+If you want to use your own certificate and key (authority certified certificates for example), proceed as follows :
+
+1. put your key and certificate respectively named `privatekey.key` and `certificate.crt` in a dedicated directory.    
+2. Launch the container as above but adding a volume option : `-v <path to the dir where you put key and cert>:/keys`
+
+The image will use your certificates instead of the self signed ones.
 
 ## Building the image (alternative)
 

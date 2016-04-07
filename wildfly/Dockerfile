@@ -15,6 +15,7 @@ RUN wget -O mysql-connector-java-5.1.18.jar http://search.maven.org/remoteconten
 RUN mv mysql-connector-java-5.1.18.jar ${mysql_module_dir}
 COPY configuration/xml/mysql-module.xml ${mysql_module_dir}/module.xml
 
+
 # Rename the original configuration file
 RUN mv $JBOSS_HOME/standalone/configuration/standalone.xml $JBOSS_HOME/standalone/configuration/standalone.xml.orig
 
@@ -23,6 +24,10 @@ ADD configuration/xml/standalone-full-sample.xml $JBOSS_HOME/standalone/configur
 
 # Add the certificate.sh script into $JBOSS_HOME/standalone/configuration/certs
 ADD configuration/certs/ $JBOSS_HOME/standalone/configuration/certs
+
+
+# update rights for everything to be jboss user owned
+RUN chown -R jboss:jboss $JBOSS_HOME/standalone
 
 # Switch to $JBOSS_HOME/configuration/certs
 WORKDIR /opt/jboss/wildfly/standalone/configuration/certs
