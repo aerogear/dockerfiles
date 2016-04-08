@@ -17,6 +17,9 @@ WORKDIR $UPSDIST/migrator
 RUN unzip ups-migrator-dist.zip
 COPY liquibase.properties  $UPSDIST/migrator/ups-migrator/
 
+# install openssl needed for certificate
+RUN yum install -y openssl && yum -q clean all
+
 # Run everything below as aerogear user
 USER jboss
 
