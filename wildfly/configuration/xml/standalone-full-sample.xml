@@ -153,11 +153,11 @@
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/datasources/UnifiedPushDS" enabled="true" use-java-context="true" pool-name="UnifiedPushDS" use-ccm="true">
-                     <connection-url>jdbc:mysql://${env.UNIFIEDPUSH_PORT_3306_TCP_ADDR}:${env.UNIFIEDPUSH_PORT_3306_TCP_PORT}/${env.UNIFIEDPUSH_ENV_MYSQL_DATABASE}?useUnicode=true&amp;characterEncoding=UTF-8</connection-url>
+                     <connection-url>jdbc:mysql://${env.MYSQL_PORT_3306_TCP_ADDR}:${env.MYSQL_PORT_3306_TCP_PORT}/${env.MYSQL_DATABASE}?useUnicode=true&amp;characterEncoding=UTF-8</connection-url>
                      <driver>mysql</driver>
                      <security>
-                       <user-name>${env.UNIFIEDPUSH_ENV_MYSQL_USER}</user-name>
-                       <password>${env.UNIFIEDPUSH_ENV_MYSQL_PASSWORD}</password>
+                       <user-name>${env.MYSQL_USER}</user-name>
+                       <password>${env.MYSQL_PASSWORD}</password>
                      </security>
                      <validation>
                          <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
@@ -170,11 +170,11 @@
                      </pool>
                  </datasource>
                  <datasource jndi-name="java:jboss/datasources/KeycloakDS" enabled="true" use-java-context="true" pool-name="KeycloakDS" use-ccm="true">
-                     <connection-url>jdbc:mysql://${env.KEYCLOAK_PORT_3306_TCP_ADDR}:${env.KEYCLOAK_PORT_3306_TCP_PORT}/${env.KEYCLOAK_ENV_MYSQL_DATABASE}?useUnicode=true&amp;characterEncoding=UTF-8</connection-url>
+                     <connection-url>jdbc:mysql://${env.MYSQL_PORT_3306_TCP_ADDR}:${env.MYSQL_PORT_3306_TCP_PORT}/${env.MYSQL_DATABASE}?useUnicode=true&amp;characterEncoding=UTF-8</connection-url>
                      <driver>mysql</driver>
                      <security>
-                       <user-name>${env.KEYCLOAK_ENV_MYSQL_USER}</user-name>
-                       <password>${env.KEYCLOAK_ENV_MYSQL_PASSWORD}</password>
+                       <user-name>${env.MYSQL_USER}</user-name>
+                       <password>${env.MYSQL_PASSWORD}</password>
                      </security>
                      <validation>
                          <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
