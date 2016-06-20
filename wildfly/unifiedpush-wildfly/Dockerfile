@@ -1,7 +1,11 @@
 # Use latest aerogear/wildfly image as the base
-FROM aerogear/wildfly
+FROM rhmap/wildfly
 MAINTAINER Bruno Oliveira <bruno@aerogear.org>
 
+RUN mkdir -p /opt/jboss/wildfly/standalone/data && \
+    mkdir -p /opt/jboss/wildfly/standalone/tmp/vfs/temp && \
+    mkdir -p /opt/jboss/wildfly/standalone/log && \
+    chmod -R 777 /opt/jboss/wildfly/standalone
 
 # Download Aerogear distribution
 ENV UPSVER=1.1.3.Final
