@@ -1,23 +1,29 @@
-# Use latest aerogear/wildfly image as the base
-FROM aerogear/wildfly
+# Use latest rhmap/wildfly image as the base
+FROM rhmap/wildfly
 MAINTAINER Bruno Oliveira <bruno@aerogear.org>
 
+RUN mkdir -p /opt/jboss/wildfly/standalone/data && \
+    mkdir -p /opt/jboss/wildfly/standalone/tmp/vfs/temp && \
+    mkdir -p /opt/jboss/wildfly/standalone/log && \
+    chmod -R 777 /opt/jboss/wildfly/standalone
 
 # Download Aerogear distribution
-ENV UPSVER=1.2.0-alpha.1
+ENV UPSVER=1.1.4-SNAPSHOT
 ENV UPSDIST=/opt/aerogear-unifiedpush-server-$UPSVER
+ENV BUILD=37
 
-RUN curl -L -o /opt/aerogear-unifiedpush-server-$UPSVER-dist.tar.gz https://github.com/aerogear/aerogear-unifiedpush-server/releases/download/$UPSVER/aerogear-unifiedpush-server-$UPSVER-dist.tar.gz
+### there is a bug, in the versioning. The TAG is correctly .Final, but the artifacts aren't...
+RUN curl -L -o /opt/aerogear-unifiedpush-server-$UPSVER-dist.tar.gz https://s3-eu-west-1.amazonaws.com/fh-builds/aerogear-unifiedpush-server/$BUILD/aerogear-unifiedpush-server-$UPSVER-dist.tar.gz
 WORKDIR /opt
 RUN tar zxf aerogear-unifiedpush-server-$UPSVER-dist.tar.gz
 
 # unzip migrator and copy liquibase.properties
 WORKDIR $UPSDIST/migrator
 RUN unzip ups-migrator-dist.zip
-COPY liquibase.properties  $UPSDIST/migrator/ups-migrator/
 
-# install openssl needed for certificate
-RUN yum install -y openssl && yum -q clean all
+# Drop-in empty liquibase.properties, mixin env vars added at runtime (see entrypoint.sh)
+RUN touch $UPSDIST/migrator/ups-migrator/liquibase.properties && \
+    chmod -R 777 $UPSDIST/migrator/ups-migrator/liquibase.properties
 
 # Run everything below as aerogear user
 USER jboss
@@ -26,8 +32,8 @@ USER jboss
 WORKDIR /opt/jboss/wildfly/standalone/deployments
 
 # copy war files
-RUN   cp $UPSDIST/servers/unifiedpush-auth-server.war $JBOSS_HOME/standalone/deployments \
-      && cp $UPSDIST/servers/unifiedpush-server-wildfly.war $JBOSS_HOME/standalone/deployments
+RUN cp $UPSDIST/servers/unifiedpush-auth-server.war $JBOSS_HOME/standalone/deployments \
+    && cp $UPSDIST/servers/unifiedpush-server-wildfly.war $JBOSS_HOME/standalone/deployments
 
 
 # copy and run startup script
