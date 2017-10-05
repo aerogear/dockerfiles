@@ -10,7 +10,7 @@ RUN yum install -y unzip wget && yum -q clean all
 
 ## MYSQL
 ENV mysql_module_dir=$JBOSS_HOME/modules/com/mysql/jdbc/main/
-ENV mysql_connector_jar=mysql-connector-java.jar
+ENV mysql_connector_jar=mysql-connector-java-5.1.44.jar
 RUN mkdir -p ${mysql_module_dir}
 RUN wget -O ${mysql_connector_jar} http://search.maven.org/remotecontent\?filepath\=mysql/mysql-connector-java/5.1.44/mysql-connector-java-5.1.44.jar
 RUN mv ${mysql_connector_jar} ${mysql_module_dir}
