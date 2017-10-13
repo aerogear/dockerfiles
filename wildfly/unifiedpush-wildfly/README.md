@@ -26,7 +26,7 @@ For the Keycloak instance run the following command:
 
 
 ```shell
-docker run --name keycloakSRV
+docker run --name keycloakSRV \
            -v /path/to/my/folder/containing/ups-realm:/keycloak-cfg \
            -e KEYCLOAK_USER=admin \
            -e KEYCLOAK_PASSWORD=admin \
