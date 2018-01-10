@@ -22,10 +22,10 @@ fi
 # launch wildfly
 echo "launching wildfly"
 
-if [ "x$KEYCLOAK_SERVICE_PORT" = "x80" ]; then
+if [ "x$KEYCLOAK_SERVICE_PORT" == "x80" ]; then
   echo "Launching Aerogear with Keycloak on http default port..."
   exec /opt/jboss/wildfly/bin/standalone.sh -Dups.realm.name=aerogear -Dups.auth.server.url=http://${KEYCLOAK_SERVICE_HOST}/auth -b 0.0.0.0 $@
-else if [ "x$KEYCLOAK_SERVICE_PORT" = "x443" ]; then
+elif [ "x$KEYCLOAK_SERVICE_PORT" == "x443" ]; then
   echo "Launching Aerogear with Keycloak on https default 80 port..."
   exec /opt/jboss/wildfly/bin/standalone.sh -Dups.realm.name=aerogear -Dups.auth.server.url=https://${KEYCLOAK_SERVICE_HOST}/auth -b 0.0.0.0 $@
 else
