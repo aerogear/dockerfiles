@@ -18,27 +18,15 @@ Follow the [instructions](http://docs.docker.com/installation/)
 
 ## Running the image
 
-We need to run a Keycloak Server and a database for the UPS itself.
+Before starting the UPS we need to have a Keycloak Server and a database available for it.
 
-### Keycloak Server
-
-For the Keycloak instance run the following command:
-
+You can start a database for the UnifiedPush Server using the following command:
 
 ```shell
-docker run --name keycloakSRV \
-           -v /path/to/my/folder/containing/ups-realm:/keycloak-cfg \
-           -e KEYCLOAK_USER=admin \
-           -e KEYCLOAK_PASSWORD=admin \
-           jboss/keycloak:3.4.2.Final \
-           "-b 0.0.0.0 -Dkeycloak.import=/keycloak-cfg/ups-realm-sample.json"
-```
-
-For the database of the UnifiedPush Server itself, a similar command is needed:
-
-```shell
-docker run --name unifiedpushDB \
+$ docker run --name unifiedpushDB \
            -p 11306:3306 \
+           -p 8080:8080 \
+           -p 9090:9090 \
            -e MYSQL_USER=unifiedpush \
            -e MYSQL_PASSWORD=unifiedpush \
            -e MYSQL_DATABASE=unifiedpush \
@@ -46,17 +34,32 @@ docker run --name unifiedpushDB \
            -d mysql:5.5
 ```
 
-**Note** you can skip the -p options for the 2 database containers if you do not want to access the databases directly
+This creates a MySQL instance and exposes the ports we'll need for Keycloak, UPS, and MySQL.
 
+You can run the commands below to start Keycloak and the UPS containers. These containers both share the same network as the database container due to the `--net` option that's passed so we don't need to specify the port options again. 
 
-The two databases are now linked into the container that serves WildFly, containing the latest release of the UPS
+Replace `localhost` and `/path/to/my/folder/containing/ups-realm` with your own values as necessary. A sample realm configuration can be found [here](https://github.com/aerogear/aerogear-unifiedpush-server/tree/master/docker-compose/keycloak-realm).
 
 ```shell
-docker run --name ups \
-           --link unifiedpushDB:unifiedpush \
-           --link keycloakSRV:keycloak \
-           -p 9090:8080 \
-           -it aerogear/unifiedpush-wildfly
+$ docker run -d --name keycloak \
+           --net=container:unifiedpushDB \
+           -v /path/to/my/folder/containing/ups-realm:/keycloak-cfg \
+           -e KEYCLOAK_USER=admin \
+           -e KEYCLOAK_PASSWORD=admin \
+           jboss/keycloak:3.4.2.Final \
+           "-b 0.0.0.0 -Dkeycloak.import=/keycloak-cfg/ups-realm-sample.json"
+
+$ docker run --name ups \
+           --net=container:unifiedpushDB \
+           -e MYSQL_SERVICE_HOST=localhost \
+           -e MYSQL_SERVICE_PORT=3306 \
+           -e MYSQL_DATABASE=unifiedpush \
+           -e MYSQL_USER=unifiedpush \
+           -e MYSQL_PASSWORD=unifiedpush \
+           -e KEYCLOAK_SERVICE_HOST=localhost \
+           -e KEYCLOAK_SERVICE_PORT=8080 \
+           -dit aerogear/unifiedpush-wildfly \
+           "-Djboss.socket.binding.port-offset=1010"
 ```
 
 **Note**: The image will run SSL by default with self signed certificates being automatically generated.    
@@ -75,17 +78,20 @@ Afterwards build the `unifiedpush-wildfly` image yourself, by running:
 
 `docker build -t aerogear/unifiedpush-wildfly .`
 
-## Accessing it
+## Accessing UPS
 
-Get the image IP address, for example:
+It only exposes SSL port, all HTTP requests will be redirected to HTTPS.
 
-`docker-machine ip default` or `docker inspect IMAGENAME | grep -i IPAdr`
+If you're developing locally with a default Docker setup you should be able to access the UPS server at `https://localhost:9090/ag-push`. Alternatively, get the image IP address, using one of these commands:
 
-Access it:
+```
+$ docker-machine ip default
+$ docker inspect IMAGENAME | grep -i IPAddr
+```
 
-It only exposes SSL port, all the requests will be redirected to HTTPS.
+You can then navigate to `http://myip:9090/ag-push`.
 
-`http://myip:9090/ag-push`
+Login using the default values of `admin` for the username and `123` as the password.
 
 ## Contributing
 
