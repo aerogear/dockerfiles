@@ -24,7 +24,6 @@ You can start a database for the UnifiedPush Server using the following command:
 
 ```shell
 $ docker run --name unifiedpushDB \
-           -p 11306:3306 \
            -p 8080:8080 \
            -p 9090:9090 \
            -e MYSQL_USER=unifiedpush \
