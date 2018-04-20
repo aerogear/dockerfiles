@@ -1,5 +1,5 @@
 # Use latest aerogear/wildfly image as the base
-FROM aerogear/wildfly
+FROM aerogear/wildfly:2.0.0
 MAINTAINER Matthias Wessendorf <matzew@apache.org>
 
 

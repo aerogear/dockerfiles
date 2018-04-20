@@ -1,4 +1,4 @@
-# AeroGear UnifiedPush plain server environment
+# AeroGear UnifiedPush server environment
 
 [![](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/aerogear/unifiedpush-wildfly/)
 [![Docker Stars](https://img.shields.io/docker/stars/aerogear/unifiedpush-wildfly.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/aerogear/unifiedpush-wildfly/stars/count/)
@@ -18,42 +18,35 @@ Follow the [instructions](http://docs.docker.com/installation/)
 
 ## Running the image
 
+Before starting the UPS we need to have a database available for it.
+
 You can start a database for the UnifiedPush Server using the following command:
 
 ```shell
-docker run  -e POSTGRES_PASSWORD=unifiedpush \  
-            -e POSTGRES_USER=unifiedpush \
-            -e POSTGRES_DATABASE=unifiedpush \ 
-            -p5432:5432 -d \
-            postgres:9.6
+$ docker run --name unifiedpushDB \
+           -p 5432:5432 \
+           -e POSTGRES_USER=unifiedpush \
+           -e POSTGRES_PASSWORD=unifiedpush \
+           -e POSTGRES_DATABASE=unifiedpush \
+           -e POSTGRES_ROOT_PASSWORD=supersecret \
+           -d postgres:9.6
 ```
 
-This creates a PostgreSQL instance and exposes the ports we'll need for UPS.
+This creates a Postgres instance and exposes the ports we'll need for UPS and Postgres.
 
-You can run the commands below to start Keycloak and the UPS containers. These containers both share the same network as the database container due to the `--net` option that's passed so we don't need to specify the port options again. 
+You can run the commands below to start the UPS containers. The container shares the same network as the database container due to the `--net` option that's passed so we don't need to specify the port options again. 
 
-Replace `localhost` and `/path/to/my/folder/containing/ups-realm` with your own values as necessary. A sample realm configuration can be found [here](https://github.com/aerogear/aerogear-unifiedpush-server/tree/master/docker-compose/keycloak-realm).
+Replace `localhost` with your own values as necessary.
 
 ```shell
-$ docker run -d --name keycloak \
-           --net=container:unifiedpushDB \
-           -v /path/to/my/folder/containing/ups-realm:/keycloak-cfg \
-           -e KEYCLOAK_USER=admin \
-           -e KEYCLOAK_PASSWORD=admin \
-           jboss/keycloak:3.4.2.Final \
-           "-b 0.0.0.0 -Dkeycloak.import=/keycloak-cfg/ups-realm-sample.json"
-
 $ docker run --name ups \
            --net=container:unifiedpushDB \
-           -e MYSQL_SERVICE_HOST=localhost \
-           -e MYSQL_SERVICE_PORT=3306 \
-           -e MYSQL_DATABASE=unifiedpush \
-           -e MYSQL_USER=unifiedpush \
-           -e MYSQL_PASSWORD=unifiedpush \
-           -e KEYCLOAK_SERVICE_HOST=localhost \
-           -e KEYCLOAK_SERVICE_PORT=8080 \
-           -dit aerogear/unifiedpush-wildfly \
-           "-Djboss.socket.binding.port-offset=1010"
+           -e POSTGRES_SERVICE_HOST=localhost \
+           -e POSTGRES_SERVICE_PORT=5432 \
+           -e POSTGRES_DATABASE=unifiedpush \
+           -e POSTGRES_USER=unifiedpush \
+           -e POSTGRES_PASSWORD=supersecret \
+           -dit aerogear/unifiedpush-wildfly-plain:2.0.1
 ```
 
 **Note**: The image will run SSL by default with self signed certificates being automatically generated.    
