@@ -45,7 +45,7 @@ $ docker run -d --name keycloak \
            -v /path/to/my/folder/containing/ups-realm:/keycloak-cfg \
            -e KEYCLOAK_USER=admin \
            -e KEYCLOAK_PASSWORD=admin \
-           jboss/keycloak:3.4.3.Final \
+           jboss/keycloak:4.0.0.Final \
            "-b 0.0.0.0 -Dkeycloak.import=/keycloak-cfg/ups-realm-sample.json"
 
 $ docker run --name ups \
